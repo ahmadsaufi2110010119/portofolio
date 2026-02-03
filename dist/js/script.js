@@ -42,3 +42,40 @@ closeBtn.addEventListener('click', () => {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
 });
+
+
+// kirim ke email
+const form = document.getElementById('contactForm');
+const submitBtn = document.getElementById('submitBtn');
+const loadingText = document.getElementById('loading');
+
+form.addEventListener('submit', async function(e) {
+  e.preventDefault(); // mencegah reload
+
+  submitBtn.disabled = true;
+  loadingText.classList.remove('hidden');
+
+  const formData = new FormData(form);
+  
+  try {
+    const response = await fetch('https://formspree.io/f/meeznnvj', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      alert('Pesan berhasil dikirim!');
+      form.reset();
+    } else {
+      alert('Gagal mengirim pesan. Silakan coba lagi.');
+    }
+  } catch (error) {
+    alert('Terjadi kesalahan: ' + error.message);
+  } finally {
+    submitBtn.disabled = false;
+    loadingText.classList.add('hidden');
+  }
+});
